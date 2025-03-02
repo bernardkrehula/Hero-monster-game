@@ -7,14 +7,22 @@
     display: flex;
     justify-content: center;
 }
+.main h2{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 500;
+}
 .main button {
     padding: 10px 20px;
     text-transform: uppercase;
     border-radius: 5px;
     border: none;
-    color: white;
-    background-color: rgb(108, 45, 190);
-    background-image: linear-gradient(rgb(108, 45, 190));
+    color: rgb(238, 238, 238);
+    background: linear-gradient(30deg, rgb(108, 45, 190),  rgb(70, 58, 87));
+}
+.main button:hover {
+    background: linear-gradient(30deg, rgb(109, 25, 218),  rgb(31, 13, 54));
+    color: rgb(255, 255, 255);
+    transition: 0.3s ease-in-out;
 }
 .manageMonsters{
     text-align: center;
@@ -37,6 +45,7 @@
 }
 .manageHero button{
     padding: 10px 30px;
+    margin-top: 15px;
 }
 .manageHero img {
     margin-bottom: -70px;
