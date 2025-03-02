@@ -4,6 +4,7 @@ let createMonsters = document.querySelectorAll('.createMonsters');
 let manageMonsters = document.querySelector('.manageMonsters');
 let attackBtn = document.querySelectorAll('.createMonsters button');
 let heroArmor = document.querySelector('.heroArmor');
+let heroHealth = document.querySelector('.heroHealth');
 
 function manageFight() {
     let monsterHealth = 1;
@@ -16,8 +17,27 @@ function manageFight() {
     const pushMonsterInArray = () => monsterArray.push(monsterValuesCreator());
 
     const monsterValuesCreator = () => {
-        return { monsterHealth, monsterAttack };
+        let id = crypto.randomUUID();
+        const getId = () => {return id}
+        return { getId, monsterHealth, monsterAttack };
     };
+
+    const monsterDefeated = (id) => {
+        monsterArray.filter((monster) => monster.getId() != id);
+        return monsterArray;
+    }
+
+
+    const monsterAttackOnHero = () => {
+        if(monsterAttack > heroArmor){
+            heroHealth -= 1;
+            heroHealth = Math.max(0, heroHealth);
+        }
+        else {
+
+        }
+        console.log(heroHealth)
+    }
     const setMonsterArrayLenght = () => {
         return monsterArray.length;
     }
@@ -30,23 +50,17 @@ function manageFight() {
         }
         return heroArmor;
     }
+    const getHeroHealth = () => { return heroHealth; }
    
-    return { pushMonsterInArray, monsterValuesCreator, setMonsterArrayLenght, boostHeroArmor }
+    return { pushMonsterInArray, monsterValuesCreator, setMonsterArrayLenght, boostHeroArmor, monsterAttackOnHero, monsterDefeated, getHeroHealth }
 }
 const fightManager = manageFight();
 
 boostBtn.addEventListener('click', () => {
-    heroArmor.innerHTML = fightManager.boostHeroArmor();
-    setTimeout(() => { heroArmor.innerHTML = fightManager.boostHeroArmor() }, 10000);
+    heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}`;
+    setTimeout(() => { heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}` }, 10000);
 })
-function callMonsterAttack() {
-    attackBtn = document.querySelectorAll('.createMonsters button');
-    attackBtn.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-            console.log(e.target)
-        })
-   })
-}
+
 function createMonster() {
     let html = 
     `
@@ -61,15 +75,31 @@ function createMonster() {
     `;
     manageMonsters.insertAdjacentHTML('beforeend', html);
 }
-createMonsterBtn.addEventListener('click', () => {
-    fightManager.monsterValuesCreator();
-    fightManager.pushMonsterInArray();
-    createMonster();
+function disableCreateMonsterBtn() {
+
     if(fightManager.setMonsterArrayLenght() > 3){
         createMonsterBtn.style.pointerEvents = 'none';
     }
     else {
         createMonsterBtn.style.pointerEvents = 'auto';
     }
-    callMonsterAttack();
+}
+
+createMonsterBtn.addEventListener('click', (e) => {
+    fightManager.monsterValuesCreator();
+    fightManager.pushMonsterInArray();
+    createMonster();
+    disableCreateMonsterBtn();
+})
+
+manageMonsters.addEventListener('click', (e) => {
+    let getMonster = e.target.closest('button');
+    if(getMonster == null) { return }
+    if(getMonster.classList == ''){
+        getMonster.id = fightManager.monsterValuesCreator().getId();
+        fightManager.monsterAttackOnHero();
+        // fightManager.monsterDefeated(getMonster.id);
+        console.log(getMonster)
+    }
+    heroHealth.innerHTML = `Health: ${fightManager.getHeroHealth()}`;
 })

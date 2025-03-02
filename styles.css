@@ -26,6 +26,7 @@
 }
 .manageMonsters{
     text-align: center;
+    height: 0;
 }
 .createMonsterButton{
     margin-top: 30px;
