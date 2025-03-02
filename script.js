@@ -2,6 +2,7 @@ let createMonsterBtn = document.querySelector('.createMonsterButton');
 let boostBtn = document.querySelector('.boost');
 let createMonsters = document.querySelectorAll('.createMonsters');
 let manageMonsters = document.querySelector('.manageMonsters');
+let attackBtn = document.querySelectorAll('.createMonsters button');
 
 function manageFight() {
     let monsterHealth = 1;
@@ -28,7 +29,14 @@ const fightManager = manageFight();
 boostBtn.addEventListener('click', () => {
    
 })
-
+function callMonsterAttack() {
+    attackBtn = document.querySelectorAll('.createMonsters button');
+    attackBtn.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            console.log(e.target)
+        })
+   })
+}
 function createMonster() {
     let html = 
     `
@@ -53,4 +61,5 @@ createMonsterBtn.addEventListener('click', () => {
     else {
         createMonsterBtn.style.pointerEvents = 'auto';
     }
+    callMonsterAttack();
 })
