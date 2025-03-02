@@ -4,17 +4,27 @@ let createMonsters = document.querySelectorAll('.createMonsters');
 let manageMonsters = document.querySelector('.manageMonsters');
 
 function manageFight() {
-    let monsterHealth;
-    let monsterAttack;
-    let heroArmor;
-    let heroHealth;
+    let monsterHealth = 1;
+    let monsterAttack = 10;
+    let heroArmor = 9;
+    let heroHealth = 10;
 
     let monsterArray = [];
 
-    
+    const pushMonsterInArray = () => monsterArray.push(monsterValuesCreator());
+
+    const monsterValuesCreator = () => {
+        console.log(monsterArray) 
+        return { monsterHealth, monsterAttack };
+    };
+    return { pushMonsterInArray, monsterValuesCreator }
 }
+const fightManager = manageFight();
+
+
 boostBtn.addEventListener('click', () => {
-    
+    fightManager.monsterValuesCreator();
+    fightManager.pushMonsterInArray();
 })
 
 function createMonster() {
