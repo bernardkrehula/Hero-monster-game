@@ -1,0 +1,43 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.main{
+    display: flex;
+    justify-content: center;
+}
+.main button {
+    padding: 10px 20px;
+    text-transform: uppercase;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    background-color: rgb(108, 45, 190);
+    background-image: linear-gradient(rgb(108, 45, 190));
+}
+.manageMonsters{
+    text-align: center;
+}
+.createMonster{
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+.createMonsters{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.manageMonsters img {
+    height: 100px;
+}
+.manageHero{
+  width: 500px;
+  text-align: center;
+}
+.manageHero button{
+    padding: 10px 30px;
+}
+.manageHero img {
+    margin-bottom: -70px;
+}
