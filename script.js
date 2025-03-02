@@ -14,17 +14,19 @@ function manageFight() {
     const pushMonsterInArray = () => monsterArray.push(monsterValuesCreator());
 
     const monsterValuesCreator = () => {
-        console.log(monsterArray) 
         return { monsterHealth, monsterAttack };
     };
-    return { pushMonsterInArray, monsterValuesCreator }
+    const fixMonsterArrayLenght = () => {
+        return monsterArray.length;
+    }
+
+    return { pushMonsterInArray, monsterValuesCreator, fixMonsterArrayLenght }
 }
 const fightManager = manageFight();
 
 
 boostBtn.addEventListener('click', () => {
-    fightManager.monsterValuesCreator();
-    fightManager.pushMonsterInArray();
+   
 })
 
 function createMonster() {
@@ -42,5 +44,13 @@ function createMonster() {
     manageMonsters.insertAdjacentHTML('beforeend', html);
 }
 createMonsterBtn.addEventListener('click', () => {
+    fightManager.monsterValuesCreator();
+    fightManager.pushMonsterInArray();
     createMonster();
+    if(fightManager.fixMonsterArrayLenght() > 3){
+        createMonsterBtn.style.pointerEvents = 'none';
+    }
+    else {
+        createMonsterBtn.style.pointerEvents = 'auto';
+    }
 })
