@@ -3,6 +3,7 @@ let boostBtn = document.querySelector('.boost');
 let createMonsters = document.querySelectorAll('.createMonsters');
 let manageMonsters = document.querySelector('.manageMonsters');
 let attackBtn = document.querySelectorAll('.createMonsters button');
+let heroArmor = document.querySelector('.heroArmor');
 
 function manageFight() {
     let monsterHealth = 1;
@@ -17,17 +18,26 @@ function manageFight() {
     const monsterValuesCreator = () => {
         return { monsterHealth, monsterAttack };
     };
-    const fixMonsterArrayLenght = () => {
+    const setMonsterArrayLenght = () => {
         return monsterArray.length;
     }
-
-    return { pushMonsterInArray, monsterValuesCreator, fixMonsterArrayLenght }
+    const boostHeroArmor = () => {
+        if(heroArmor < 10){
+            heroArmor += 10;
+        }
+        else {
+           heroArmor -= 10;
+        }
+        return heroArmor;
+    }
+   
+    return { pushMonsterInArray, monsterValuesCreator, setMonsterArrayLenght, boostHeroArmor }
 }
 const fightManager = manageFight();
 
-
 boostBtn.addEventListener('click', () => {
-   
+    heroArmor.innerHTML = fightManager.boostHeroArmor();
+    setTimeout(() => { heroArmor.innerHTML = fightManager.boostHeroArmor() }, 10000);
 })
 function callMonsterAttack() {
     attackBtn = document.querySelectorAll('.createMonsters button');
@@ -55,7 +65,7 @@ createMonsterBtn.addEventListener('click', () => {
     fightManager.monsterValuesCreator();
     fightManager.pushMonsterInArray();
     createMonster();
-    if(fightManager.fixMonsterArrayLenght() > 3){
+    if(fightManager.setMonsterArrayLenght() > 3){
         createMonsterBtn.style.pointerEvents = 'none';
     }
     else {
