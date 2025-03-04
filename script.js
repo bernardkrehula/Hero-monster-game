@@ -92,6 +92,8 @@ createMonsterBtn.addEventListener('click', (e) => {
 })
 
 manageMonsters.addEventListener('click', (e) => {
+    let currentId = e.target.closest('div').id;
+    console.log(currentId)
    //Procitat id sa trenutnog cudovista
    //Nac to cudoviste u arrrayu cudovista
    //Provjerit je li tom cudovistu napad veci od armora heroja ako jeste skini heroju 1 health
