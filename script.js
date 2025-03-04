@@ -2,43 +2,38 @@ let createMonsterBtn = document.querySelector('.createMonsterButton');
 let boostBtn = document.querySelector('.boost');
 let createMonsters = document.querySelectorAll('.createMonsters');
 let manageMonsters = document.querySelector('.manageMonsters');
-let attackBtn = document.querySelectorAll('.createMonsters button');
 let heroArmor = document.querySelector('.heroArmor');
 let heroHealth = document.querySelector('.heroHealth');
 
-function manageFight() {
+function monsterCreator() {
     let monsterHealth = 1;
     let monsterAttack = 10;
+    let id = crypto.randomUUID();
+    const getId = () => {return id};
+    const getMonsterHealth = () => monsterHealth;
+    const getMonsterAttack = () => monsterAttack; 
+    return { getId, getMonsterHealth, getMonsterAttack };
+}
+
+function manageFight() {
+    
     let heroArmor = 9;
     let heroHealth = 10;
 
     let monsterArray = [];
 
-    const pushMonsterInArray = () => monsterArray.push(monsterValuesCreator());
-
-    const monsterValuesCreator = () => {
-        let id = crypto.randomUUID();
-        const getId = () => {return id}
-        return { getId, monsterHealth, monsterAttack };
-    };
+    const pushMonsterInArray = (monster) => monsterArray.push(monster);
 
     const monsterDefeated = (id) => {
-        monsterArray.filter((monster) => monster.getId() != id);
+        monsterArray = monsterArray.filter(monster => monster.getId() != id);
         return monsterArray;
     }
 
-
     const monsterAttackOnHero = () => {
-        if(monsterAttack > heroArmor){
-            heroHealth -= 1;
-            heroHealth = Math.max(0, heroHealth);
-        }
-        else {
-
-        }
-        console.log(heroHealth)
+        heroHealth -= 1;
+        console.log(monsterArray)
     }
-    const setMonsterArrayLenght = () => {
+    const setMonsterArrayLength = () => {
         return monsterArray.length;
     }
     const boostHeroArmor = () => {
@@ -52,7 +47,7 @@ function manageFight() {
     }
     const getHeroHealth = () => { return heroHealth; }
    
-    return { pushMonsterInArray, monsterValuesCreator, setMonsterArrayLenght, boostHeroArmor, monsterAttackOnHero, monsterDefeated, getHeroHealth }
+    return { pushMonsterInArray, setMonsterArrayLength, boostHeroArmor, monsterAttackOnHero, monsterDefeated, getHeroHealth }
 }
 const fightManager = manageFight();
 
@@ -60,11 +55,14 @@ boostBtn.addEventListener('click', () => {
     heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}`;
     setTimeout(() => { heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}` }, 10000);
 })
-
-function createMonster() {
+//CreateMonster neka primi argument id
+//Taj id zakaci na createMonsters
+//Kad se klikne na attack button procitaj taj id
+//Iskoristi ga da handlam napad cudovista
+function createMonster(monsterId) {
     let html = 
     `
-    <div class="createMonsters">
+    <div class="createMonsters" id='${monsterId}'>
         <button>Attack</button>
         <img src="monster.png">
         <div class="monsterValues">
@@ -77,7 +75,7 @@ function createMonster() {
 }
 function disableCreateMonsterBtn() {
 
-    if(fightManager.setMonsterArrayLenght() > 3){
+    if(fightManager.setMonsterArrayLength() > 3){
         createMonsterBtn.style.pointerEvents = 'none';
     }
     else {
@@ -86,20 +84,16 @@ function disableCreateMonsterBtn() {
 }
 
 createMonsterBtn.addEventListener('click', (e) => {
-    fightManager.monsterValuesCreator();
-    fightManager.pushMonsterInArray();
-    createMonster();
-    disableCreateMonsterBtn();
+    const newMonster = monsterCreator();
+    fightManager.pushMonsterInArray(newMonster);
+    createMonster(newMonster.getId())
+    disableCreateMonsterBtn()
+    fightManager.monsterAttackOnHero();
 })
 
 manageMonsters.addEventListener('click', (e) => {
-    let getMonster = e.target.closest('button');
-    if(getMonster == null) { return }
-    if(getMonster.classList == ''){
-        getMonster.id = fightManager.monsterValuesCreator().getId();
-        fightManager.monsterAttackOnHero();
-        // fightManager.monsterDefeated(getMonster.id);
-        console.log(getMonster)
-    }
-    heroHealth.innerHTML = `Health: ${fightManager.getHeroHealth()}`;
+   //Procitat id sa trenutnog cudovista
+   //Nac to cudoviste u arrrayu cudovista
+   //Provjerit je li tom cudovistu napad veci od armora heroja ako jeste skini heroju 1 health
+   //Ako nije ubi cudoviste
 })
