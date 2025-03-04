@@ -32,10 +32,14 @@ function manageFight() {
             return monsterArray;
         }    
     }
-
     const monsterAttackOnHero = () => {
-        heroHealth -= 1;
-        return heroHealth;
+        if(heroArmor == 9){
+            heroHealth -= 1;
+            return heroHealth;
+        }
+        else {
+            return heroHealth;
+        }
     }
     const setMonsterArrayLength = () => {
         return monsterArray.length;
@@ -49,17 +53,13 @@ function manageFight() {
         }
         return heroArmor;
     }
-    const getHeroHealth = () => { return heroHealth; }
+    
+    const getHeroArmor = () => { return heroArmor }
    
-    return { pushMonsterInArray, setMonsterArrayLength, boostHeroArmor, monsterAttackOnHero, monsterDefeated, getHeroHealth }
+    return { pushMonsterInArray, setMonsterArrayLength, boostHeroArmor, monsterAttackOnHero, monsterDefeated, getHeroArmor }
 }
 const fightManager = manageFight();
 
-
-//CreateMonster neka primi argument id
-//Taj id zakaci na createMonsters
-//Kad se klikne na attack button procitaj taj id
-//Iskoristi ga da handlam napad cudovista
 function createMonster(monsterId) {
     let html = 
     `
@@ -100,13 +100,12 @@ manageMonsters.addEventListener('click', (e) => {
     let currentId = e.target.closest('div').id;
     let div = e.target.closest('div');
     if(currentId){ 
+        fightManager.monsterDefeated(currentId);
         heroHealth.innerHTML = `Health: ${fightManager.monsterAttackOnHero()}`;
-        manageMonsters.removeChild(div);
     };
-    fightManager.monsterDefeated(currentId);
     
-   //Procitat id sa trenutnog cudovista
-   //Nac to cudoviste u arrrayu cudovista
-   //Provjerit je li tom cudovistu napad veci od armora heroja ako jeste skini heroju 1 health
-   //Ako nije ubi cudoviste
+    if(fightManager.getHeroArmor() > 9){
+        manageMonsters.removeChild(div);
+    }
+
 })
