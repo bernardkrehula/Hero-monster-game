@@ -10,8 +10,8 @@ function monsterCreator() {
     let monsterAttack = 10;
     let id = crypto.randomUUID();
     const getId = () => {return id};
-    const getMonsterHealth = () => monsterHealth;
-    const getMonsterAttack = () => monsterAttack; 
+    const getMonsterHealth = () => { return monsterHealth };
+    const getMonsterAttack = () => { return monsterAttack }; 
     return { getId, getMonsterHealth, getMonsterAttack };
 }
 
@@ -20,18 +20,22 @@ function manageFight() {
     let heroArmor = 9;
     let heroHealth = 10;
 
+    const monsterObjectCreator = monsterCreator();
+
     let monsterArray = [];
 
     const pushMonsterInArray = (monster) => monsterArray.push(monster);
 
     const monsterDefeated = (id) => {
-        monsterArray = monsterArray.filter(monster => monster.getId() != id);
-        return monsterArray;
+        if(heroArmor > monsterObjectCreator.getMonsterAttack()){
+            monsterArray = monsterArray.filter(monster => monster.getId() != id);
+            return monsterArray;
+        }    
     }
 
     const monsterAttackOnHero = () => {
         heroHealth -= 1;
-        console.log(monsterArray)
+        return heroHealth;
     }
     const setMonsterArrayLength = () => {
         return monsterArray.length;
@@ -51,10 +55,7 @@ function manageFight() {
 }
 const fightManager = manageFight();
 
-boostBtn.addEventListener('click', () => {
-    heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}`;
-    setTimeout(() => { heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}` }, 10000);
-})
+
 //CreateMonster neka primi argument id
 //Taj id zakaci na createMonsters
 //Kad se klikne na attack button procitaj taj id
@@ -73,6 +74,7 @@ function createMonster(monsterId) {
     `;
     manageMonsters.insertAdjacentHTML('beforeend', html);
 }
+
 function disableCreateMonsterBtn() {
 
     if(fightManager.setMonsterArrayLength() > 3){
@@ -82,18 +84,27 @@ function disableCreateMonsterBtn() {
         createMonsterBtn.style.pointerEvents = 'auto';
     }
 }
+boostBtn.addEventListener('click', () => {
+    heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}`;
+    setTimeout(() => { heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}` }, 10000);
+})
 
 createMonsterBtn.addEventListener('click', (e) => {
     const newMonster = monsterCreator();
     fightManager.pushMonsterInArray(newMonster);
     createMonster(newMonster.getId())
-    disableCreateMonsterBtn()
-    fightManager.monsterAttackOnHero();
+    disableCreateMonsterBtn();
 })
 
 manageMonsters.addEventListener('click', (e) => {
     let currentId = e.target.closest('div').id;
-    console.log(currentId)
+    let div = e.target.closest('div');
+    if(currentId){ 
+        heroHealth.innerHTML = `Health: ${fightManager.monsterAttackOnHero()}`;
+        manageMonsters.removeChild(div);
+    };
+    fightManager.monsterDefeated(currentId);
+    
    //Procitat id sa trenutnog cudovista
    //Nac to cudoviste u arrrayu cudovista
    //Provjerit je li tom cudovistu napad veci od armora heroja ako jeste skini heroju 1 health
