@@ -4,6 +4,7 @@ let createMonsters = document.querySelectorAll('.createMonsters');
 let manageMonsters = document.querySelector('.manageMonsters');
 let heroArmor = document.querySelector('.heroArmor');
 let heroHealth = document.querySelector('.heroHealth');
+let main = document.querySelector('.main');
 
 function monsterCreator() {
     let monsterHealth = 1;
@@ -27,21 +28,28 @@ function manageFight() {
     const pushMonsterInArray = (monster) => monsterArray.push(monster);
 
     const monsterDefeated = (id) => {
-        if(heroArmor > monsterObjectCreator.getMonsterAttack()){
-            monsterArray = monsterArray.filter(monster => monster.getId() != id);
-            return monsterArray;
-        }    
+        monsterArray = monsterArray.filter(monster => monster.getId() != id);
+        return monsterArray;
+    } 
+
+    const findAttackBtn = (id) => {
+        const attackBtn = monsterArray.find((el) => el.id == id);
+        return attackBtn;
     }
+    //Koristiti find za pronalazenje cudovista
+
+
     const monsterAttackOnHero = () => {
-        if(heroArmor == 9){
+        if(findAttackBtn().getMonsterAttack() > heroArmor){
             heroHealth -= 1;
             return heroHealth;
         }
         else {
+            monsterDefeated();
             return heroHealth;
         }
     }
-    const setMonsterArrayLength = () => {
+    const getMonsterArrayLength = () => {
         return monsterArray.length;
     }
     const boostHeroArmor = () => {
@@ -53,10 +61,11 @@ function manageFight() {
         }
         return heroArmor;
     }
+    const getMonsterHealth = () => { return heroHealth };
     
     const getHeroArmor = () => { return heroArmor }
    
-    return { pushMonsterInArray, setMonsterArrayLength, boostHeroArmor, monsterAttackOnHero, monsterDefeated, getHeroArmor }
+    return { pushMonsterInArray, getMonsterArrayLength, boostHeroArmor, monsterAttackOnHero, monsterDefeated, getHeroArmor,  getMonsterHealth, findAttackBtn }
 }
 const fightManager = manageFight();
 
@@ -77,13 +86,14 @@ function createMonster(monsterId) {
 
 function disableCreateMonsterBtn() {
 
-    if(fightManager.setMonsterArrayLength() > 3){
+    if(fightManager.getMonsterArrayLength() > 3){
         createMonsterBtn.style.pointerEvents = 'none';
     }
     else {
         createMonsterBtn.style.pointerEvents = 'auto';
     }
 }
+
 boostBtn.addEventListener('click', () => {
     heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}`;
     setTimeout(() => { heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}` }, 10000);
@@ -92,20 +102,33 @@ boostBtn.addEventListener('click', () => {
 createMonsterBtn.addEventListener('click', (e) => {
     const newMonster = monsterCreator();
     fightManager.pushMonsterInArray(newMonster);
-    createMonster(newMonster.getId())
+    createMonster(newMonster.getId());
     disableCreateMonsterBtn();
 })
 
 manageMonsters.addEventListener('click', (e) => {
     let currentId = e.target.closest('div').id;
     let div = e.target.closest('div');
-    if(currentId){ 
-        fightManager.monsterDefeated(currentId);
-        heroHealth.innerHTML = `Health: ${fightManager.monsterAttackOnHero()}`;
-    };
-    
-    if(fightManager.getHeroArmor() > 9){
-        manageMonsters.removeChild(div);
-    }
 
+    if(currentId){ 
+        fightManager.findAttackBtn(currentId);
+        console.log(fightManager.findAttackBtn())
+        heroHealth.innerHTML = `Health: ${fightManager.monsterAttackOnHero()}`;
+        /* fightManager.monsterDefeated(currentId);
+    
+
+        if(fightManager.getHeroArmor() > 9){
+            manageMonsters.removeChild(div);
+        }
+    
+        if(fightManager.getMonsterHealth() == 0){
+            let html = `<h1 class="deadAndWon">You died!</h1>`;
+            main.insertAdjacentHTML('afterend', html);
+        }
+        if(fightManager.getMonsterArrayLength() == 0){
+            let html = `<h1 class="deadAndWon">You Won!</h1>`;
+            main.insertAdjacentHTML('afterend', html);
+        } */
+    };
+    disableCreateMonsterBtn();
 })
