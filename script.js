@@ -21,31 +21,29 @@ function manageFight() {
     let heroArmor = 9;
     let heroHealth = 10;
 
-    const monsterObjectCreator = monsterCreator();
-
     let monsterArray = [];
 
     const pushMonsterInArray = (monster) => monsterArray.push(monster);
 
-    const monsterDefeated = (id) => {
-        monsterArray = monsterArray.filter(monster => monster.getId() != id);
-        return monsterArray;
-    } 
-
-    const findAttackBtn = (id) => {
-        const attackBtn = monsterArray.find((el) => el.id == id);
-        return attackBtn;
-    }
     //Koristiti find za pronalazenje cudovista
 
 
-    const monsterAttackOnHero = () => {
-        if(findAttackBtn().getMonsterAttack() > heroArmor){
+    const monsterAttackOnHero = (id) => {
+        const activeMonster = monsterArray.find((el) => el.getId() == id);
+        
+        const monsterDefeated = () => {
+            monsterArray = monsterArray.filter(monster => monster.getId() != id);
+            console.log(monsterArray)
+            return monsterArray;
+
+        }
+        if(activeMonster.getMonsterAttack() > heroArmor){
             heroHealth -= 1;
             return heroHealth;
         }
         else {
             monsterDefeated();
+            removeMonster();
             return heroHealth;
         }
     }
@@ -65,7 +63,7 @@ function manageFight() {
     
     const getHeroArmor = () => { return heroArmor }
    
-    return { pushMonsterInArray, getMonsterArrayLength, boostHeroArmor, monsterAttackOnHero, monsterDefeated, getHeroArmor,  getMonsterHealth, findAttackBtn }
+    return { pushMonsterInArray, getMonsterArrayLength, boostHeroArmor, monsterAttackOnHero, getHeroArmor,  getMonsterHealth }
 }
 const fightManager = manageFight();
 
@@ -111,9 +109,8 @@ manageMonsters.addEventListener('click', (e) => {
     let div = e.target.closest('div');
 
     if(currentId){ 
-        fightManager.findAttackBtn(currentId);
-        console.log(fightManager.findAttackBtn())
-        heroHealth.innerHTML = `Health: ${fightManager.monsterAttackOnHero()}`;
+        // fightManager.monsterDefeated(currentId);
+        heroHealth.innerHTML = `Health: ${fightManager.monsterAttackOnHero(currentId)}`;
         /* fightManager.monsterDefeated(currentId);
     
 
