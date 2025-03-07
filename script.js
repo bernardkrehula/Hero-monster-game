@@ -25,25 +25,27 @@ function manageFight() {
 
     const pushMonsterInArray = (monster) => monsterArray.push(monster);
 
-    //Koristiti find za pronalazenje cudovista
+    const monsterDefeated = (id) => {
+        monsterArray = monsterArray.filter(monster => monster.getId() != id);
+        console.log(monsterArray)
+        return monsterArray;
 
-
+    }
+    const removeMonster = (id) => {
+        let div = document.getElementById(`${id}`);
+        manageMonsters.removeChild(div);
+    }
     const monsterAttackOnHero = (id) => {
         const activeMonster = monsterArray.find((el) => el.getId() == id);
         
-        const monsterDefeated = () => {
-            monsterArray = monsterArray.filter(monster => monster.getId() != id);
-            console.log(monsterArray)
-            return monsterArray;
-
-        }
+       
         if(activeMonster.getMonsterAttack() > heroArmor){
             heroHealth -= 1;
             return heroHealth;
         }
         else {
-            monsterDefeated();
-            removeMonster();
+            monsterDefeated(activeMonster.getId());
+            removeMonster(activeMonster.getId());
             return heroHealth;
         }
     }
@@ -106,10 +108,8 @@ createMonsterBtn.addEventListener('click', (e) => {
 
 manageMonsters.addEventListener('click', (e) => {
     let currentId = e.target.closest('div').id;
-    let div = e.target.closest('div');
 
     if(currentId){ 
-        // fightManager.monsterDefeated(currentId);
         heroHealth.innerHTML = `Health: ${fightManager.monsterAttackOnHero(currentId)}`;
         /* fightManager.monsterDefeated(currentId);
     
