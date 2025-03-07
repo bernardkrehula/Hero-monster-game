@@ -5,6 +5,7 @@ let manageMonsters = document.querySelector('.manageMonsters');
 let heroArmor = document.querySelector('.heroArmor');
 let heroHealth = document.querySelector('.heroHealth');
 let main = document.querySelector('.main');
+let deadAndWon = document.querySelector('.deadAndWon');
 
 function monsterCreator() {
     let monsterHealth = 1;
@@ -27,7 +28,6 @@ function manageFight() {
 
     const monsterDefeated = (id) => {
         monsterArray = monsterArray.filter(monster => monster.getId() != id);
-        console.log(monsterArray)
         return monsterArray;
 
     }
@@ -38,11 +38,15 @@ function manageFight() {
     const monsterAttackOnHero = (id) => {
         const activeMonster = monsterArray.find((el) => el.getId() == id);
         
-       
         if(activeMonster.getMonsterAttack() > heroArmor){
+            if(heroHealth == 0){
+                return heroHealth;
+            }
+            
             heroHealth -= 1;
             return heroHealth;
         }
+      
         else {
             monsterDefeated(activeMonster.getId());
             removeMonster(activeMonster.getId());
@@ -61,6 +65,7 @@ function manageFight() {
         }
         return heroArmor;
     }
+
     const getMonsterHealth = () => { return heroHealth };
     
     const getHeroArmor = () => { return heroArmor }
@@ -105,27 +110,23 @@ createMonsterBtn.addEventListener('click', (e) => {
     createMonster(newMonster.getId());
     disableCreateMonsterBtn();
 })
+/* 
+function createOutcome() {
+    let html = `<h1 class="deadAndWon"></h1>`;
+    main.insertAdjacentHTML('afterend', html);
+    if(fightManager.getMonsterHealth() == 0){
+        deadAndWon.innerHTML = 'You died!';
+    }
+    if(fightManager.getMonsterArrayLength() == 0){
+        deadAndWon.innerHTML = 'You won!';
+    }
+} */
 
 manageMonsters.addEventListener('click', (e) => {
     let currentId = e.target.closest('div').id;
-
     if(currentId){ 
         heroHealth.innerHTML = `Health: ${fightManager.monsterAttackOnHero(currentId)}`;
-        /* fightManager.monsterDefeated(currentId);
-    
 
-        if(fightManager.getHeroArmor() > 9){
-            manageMonsters.removeChild(div);
-        }
-    
-        if(fightManager.getMonsterHealth() == 0){
-            let html = `<h1 class="deadAndWon">You died!</h1>`;
-            main.insertAdjacentHTML('afterend', html);
-        }
-        if(fightManager.getMonsterArrayLength() == 0){
-            let html = `<h1 class="deadAndWon">You Won!</h1>`;
-            main.insertAdjacentHTML('afterend', html);
-        } */
     };
     disableCreateMonsterBtn();
 })
