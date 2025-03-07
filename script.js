@@ -5,7 +5,7 @@ let manageMonsters = document.querySelector('.manageMonsters');
 let heroArmor = document.querySelector('.heroArmor');
 let heroHealth = document.querySelector('.heroHealth');
 let main = document.querySelector('.main');
-let deadAndWon = document.querySelector('.deadAndWon');
+let fightOutcome = document.querySelector('. fightOutcome ');
 
 function monsterCreator() {
     let monsterHealth = 1;
@@ -38,11 +38,10 @@ function manageFight() {
     const monsterAttackOnHero = (id) => {
         const activeMonster = monsterArray.find((el) => el.getId() == id);
         
+        if(heroHealth == 0){
+            return heroHealth;
+        }
         if(activeMonster.getMonsterAttack() > heroArmor){
-            if(heroHealth == 0){
-                return heroHealth;
-            }
-            
             heroHealth -= 1;
             return heroHealth;
         }
@@ -89,6 +88,20 @@ function createMonster(monsterId) {
     manageMonsters.insertAdjacentHTML('beforeend', html);
 }
 
+function createOutcome() {
+    fightOutcome  = document.querySelector('. fightOutcome ');
+
+    if(fightManager.getMonsterHealth() == 0){
+        fightOutcome.textContent = 'You died!';
+    }
+    if(fightManager.getMonsterArrayLength() == 0){
+        fightOutcome.textContent = 'You won!';
+    }
+    else {
+        fightOutcome.textContent = '';
+    }
+}
+
 function disableCreateMonsterBtn() {
 
     if(fightManager.getMonsterArrayLength() > 3){
@@ -104,29 +117,20 @@ boostBtn.addEventListener('click', () => {
     setTimeout(() => { heroArmor.innerHTML = `Armor: ${fightManager.boostHeroArmor()}` }, 10000);
 })
 
-createMonsterBtn.addEventListener('click', (e) => {
+createMonsterBtn.addEventListener('click', () => {
     const newMonster = monsterCreator();
     fightManager.pushMonsterInArray(newMonster);
     createMonster(newMonster.getId());
     disableCreateMonsterBtn();
-})
-/* 
-function createOutcome() {
-    let html = `<h1 class="deadAndWon"></h1>`;
-    main.insertAdjacentHTML('afterend', html);
-    if(fightManager.getMonsterHealth() == 0){
-        deadAndWon.innerHTML = 'You died!';
-    }
-    if(fightManager.getMonsterArrayLength() == 0){
-        deadAndWon.innerHTML = 'You won!';
-    }
-} */
+}) 
 
 manageMonsters.addEventListener('click', (e) => {
     let currentId = e.target.closest('div').id;
+    createOutcome();
+    
     if(currentId){ 
         heroHealth.innerHTML = `Health: ${fightManager.monsterAttackOnHero(currentId)}`;
-
+        createOutcome();
     };
     disableCreateMonsterBtn();
 })
